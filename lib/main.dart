@@ -1,47 +1,45 @@
 import 'package:flutter/material.dart';
-import 'package:personal_library/src/domain/entities/comic.dart';
-import 'package:personal_library/src/domain/entities/creator.dart';
-import 'package:personal_library/src/presentation/cards/character_card.dart';
-import 'package:personal_library/src/domain/entities/character.dart';
-import 'package:personal_library/src/presentation/cards/comic_card.dart';
-import 'package:personal_library/src/presentation/cards/creator_card.dart';
-import 'package:personal_library/src/data/datasource/marvel_api_facade.dart';
+import 'package:personal_library/src/presentation/screens/characters_screen.dart';
+import 'package:personal_library/src/presentation/screens/comics_screen.dart';
+import 'package:personal_library/src/presentation/screens/creators_screen.dart';
+import 'package:personal_library/src/presentation/screens/listing_screen.dart';
 
 void main(){
   runApp(
       MaterialApp(
         debugShowCheckedModeBanner: true,
-        home:   MyApp(),
+        home: Home(),
   ));
 }
 
-class MyApp extends StatefulWidget {
+class Home extends StatefulWidget {
 
   List<Widget> charactersWidgets = [];
 
   @override
-  _State createState() => _State();
+  _HomeState createState() => _HomeState();
 }
 
-class _State extends State<MyApp> {
+class _HomeState extends State<Home> {
 
-  void _getWidgetList() async {
-    List<Character> characters = await MarvelApiFacade.getCharactersList();
+  int _selectedIndex = 0;
 
-    if (characters.isNotEmpty) {
-      setState(() {
-        List<Widget> widgets = [];
-        for (var character in characters){
-          widgets.add(CharacterWidget(character));
-        }
-        widget.charactersWidgets = widgets;
-      });
-    }
+  static final List<Widget> _widgetOptions = <Widget>[
+    ListingScreen(),
+    ComicsScreen(),
+    CharactersScreen(),
+    CreatorsScreen()
+  ];
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
   }
 
   @override
   void initState() {
-    _getWidgetList();
+    super.initState();
   }
 
   @override
@@ -52,13 +50,38 @@ class _State extends State<MyApp> {
         centerTitle: true,
         backgroundColor: Colors.grey,
       ),
-      body: Container(
-        padding: EdgeInsets.all(10.0),
-        child: Center(
-          child: ListView(
-            children: widget.charactersWidgets,
-          )
+      body: GestureDetector(
+        child: Container(
+          padding: EdgeInsets.all(10.0),
+          child: Center(
+              child: _widgetOptions.elementAt(_selectedIndex),
+          ),
         ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Colors.grey,
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.menu_book_sharp),
+            label: 'Comics',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.accessibility_sharp),
+            label: 'Characters',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.perm_identity_sharp),
+            label: 'Creators',
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: Colors.orange,
+        unselectedItemColor: Colors.grey,
+        onTap: _onItemTapped,
       ),
     );
   }

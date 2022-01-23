@@ -16,54 +16,57 @@ class _CharacterWidgetState extends State<CharacterWidget> {
   Widget build(BuildContext context) {
     return GestureDetector(
       // onTap: () => , call detailed screen
-      child: Container(
-        height: 170,
+      child: Container (
         margin: EdgeInsets.only(bottom: 10),
-        decoration: BoxDecoration(
-            color: Colors.grey,
-            borderRadius: BorderRadius.circular(20)
-        ),
-        child: Column (
-          //crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Row(
+        child: Material(
+          elevation: 4,
+          color: Colors.grey,
+          borderRadius: BorderRadius.circular(20),
+          child: Container(
+            height: 170,
+            child: Column (
+              //crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Container(
-                  width: 130,
-                  height: 130,
-                  padding: EdgeInsets.all(15),
-                  child:
-                  ClipRRect(
-                      borderRadius: BorderRadius.circular(20),
-                      child: Image.network(widget.character.mediumStandardThumb),
-                  )
+                Row(
+                  children: [
+                    Container(
+                        width: 130,
+                        height: 130,
+                        padding: EdgeInsets.all(15),
+                        child:
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: Image.network(widget.character.mediumStandardThumb),
+                        )
+                    ),
+                    Expanded (
+                        child:
+                        Text(
+                            widget.character.name,
+                            textAlign: TextAlign.left,
+                            style: Theme.of(context).textTheme.headline2,
+                            textScaleFactor: .5
+                        )
+                    ),
+                  ],
                 ),
-                Expanded (
-                    child:
-                    Text(
-                        widget.character.name,
-                        textAlign: TextAlign.left,
-                        style: Theme.of(context).textTheme.headline2,
-                        textScaleFactor: .5
-                    )
-                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text('${widget.character.numberHQs} Aparições',
+                        style: Theme.of(context).textTheme.headline4,
+                        textScaleFactor: .5),
+                    Text('${widget.character.savedHQs} Favoritos',
+                        style: Theme.of(context).textTheme.headline4,
+                        textScaleFactor: .5)
+                  ],
+                )
               ],
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Text('${widget.character.numberHQs} Aparições',
-                    style: Theme.of(context).textTheme.headline4,
-                    textScaleFactor: .5),
-                Text('${widget.character.savedHQs} Favoritos',
-                    style: Theme.of(context).textTheme.headline4,
-                    textScaleFactor: .5)
-              ],
-            )
-          ],
-        ),
-      ),
+          ),
+        )
+      )
     );
   }
 }

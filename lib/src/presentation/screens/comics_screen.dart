@@ -9,7 +9,7 @@ import 'package:personal_library/src/data/datasource/marvel_api_facade.dart';
 
 class ComicsScreen extends StatefulWidget {
 
-  List<Widget> charactersWidgets = [];
+  List<Widget> comicsWidgets = [];
 
   @override
   _ComicsScreenState createState() => _ComicsScreenState();
@@ -18,15 +18,15 @@ class ComicsScreen extends StatefulWidget {
 class _ComicsScreenState extends State<ComicsScreen> {
 
   void _getWidgetList() async {
-    List<Character> characters = await MarvelApiFacade.getCharactersList();
+    List<Comic> comics = await MarvelApiFacade.getComicsList();
 
-    if (characters.isNotEmpty) {
+    if (comics.isNotEmpty) {
       setState(() {
         List<Widget> widgets = [];
-        for (var character in characters){
-          widgets.add(CharacterWidget(character));
+        for (var comic in comics){
+          widgets.add(ComicWidget(comic));
         }
-        widget.charactersWidgets = widgets;
+        widget.comicsWidgets = widgets;
       });
     }
   }
@@ -38,21 +38,7 @@ class _ComicsScreenState extends State<ComicsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('title'),
-        centerTitle: true,
-        backgroundColor: Colors.grey,
-      ),
-      body: Container(
-        padding: EdgeInsets.all(10.0),
-        child: Center(
-            child: ListView(
-              children: widget.charactersWidgets,
-            )
-        ),
-      ),
-    );
+    return ListView(children: widget.comicsWidgets);
   }
 }
 

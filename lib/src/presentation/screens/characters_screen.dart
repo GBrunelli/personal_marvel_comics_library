@@ -38,21 +38,7 @@ class _CharacterScreenState extends State<CharactersScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('title'),
-        centerTitle: true,
-        backgroundColor: Colors.grey,
-      ),
-      body: Container(
-        padding: EdgeInsets.all(10.0),
-        child: Center(
-            child: ListView(
-              children: widget.charactersWidgets,
-            )
-        ),
-      ),
-    );
+    return ListView(children: widget.charactersWidgets);
   }
 }
 
