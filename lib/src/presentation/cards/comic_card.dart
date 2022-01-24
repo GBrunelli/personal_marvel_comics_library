@@ -1,4 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:personal_library/src/data/datasource/realtime_database_facade.dart';
 import 'package:personal_library/src/domain/entities/comic.dart';
 import 'package:personal_library/src/presentation/cards/comic_detailed_card.dart';
 import 'package:personal_library/src/presentation/routes/hero_dialog_route.dart';
@@ -14,6 +16,7 @@ class ComicWidget extends StatefulWidget {
 }
 
 class _ComicWidgetState extends State<ComicWidget> {
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -27,7 +30,7 @@ class _ComicWidgetState extends State<ComicWidget> {
       child: Hero(
         tag : 'show_detailed_comic',
         child: Container(
-          margin: EdgeInsets.only(bottom: 10),
+            margin: EdgeInsets.only(top: 5, bottom: 5),
           child: Material(
             elevation: 4,
             color: Colors.grey,
@@ -66,13 +69,6 @@ class _ComicWidgetState extends State<ComicWidget> {
                       ),
                     ],
                   ),
-                  Container(
-                    margin: EdgeInsets.only(bottom: 20),
-                    child:
-                    Text('${widget.comic.favoriteListings} Favoritos',
-                        style: Theme.of(context).textTheme.headline4,
-                        textScaleFactor: .5),
-                  )
                 ],
               ),
             ),

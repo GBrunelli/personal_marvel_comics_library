@@ -46,6 +46,7 @@ abstract class MarvelApiFacade {
         comic.id,
         comic.title,
         creators,
+        comic.description,
         comic.series.name,
         '', // TODO: link with user data - name listing
         0, // TODO: link with user data - number of listing

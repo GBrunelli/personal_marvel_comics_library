@@ -26,7 +26,7 @@ class _CreatorWidgetState extends State<CreatorWidget> {
     return GestureDetector(
       // onTap: () => _view_detailed(context),
       child: Container(
-        margin: const EdgeInsets.only(bottom: 10),
+        margin: EdgeInsets.only(top: 5, bottom: 5),
         child: Material(
           color: Colors.grey,
           elevation: 4,

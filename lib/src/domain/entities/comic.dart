@@ -5,6 +5,7 @@ class Comic extends MarvelEntity{
   Comic(int id,
       this.title,
       this.creator,
+      this.description,
       this.series,
       this.listing,
       this.numberOfListings,
@@ -18,6 +19,7 @@ class Comic extends MarvelEntity{
 
   String title;
   String creator;
+  String description;
   String series;
   String listing;
   int numberOfListings;

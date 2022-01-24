@@ -11,6 +11,8 @@ class ComicsScreen extends StatefulWidget {
 
   List<Widget> comicsWidgets = [];
 
+  ComicsScreen({Key? key}) : super(key: key);
+
   @override
   _ComicsScreenState createState() => _ComicsScreenState();
 }

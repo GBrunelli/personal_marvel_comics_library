@@ -17,7 +17,7 @@ class _CharacterWidgetState extends State<CharacterWidget> {
     return GestureDetector(
       // onTap: () => , call detailed screen
       child: Container (
-        margin: EdgeInsets.only(bottom: 10),
+        margin: EdgeInsets.only(top: 5, bottom: 5),
         child: Material(
           elevation: 4,
           color: Colors.grey,

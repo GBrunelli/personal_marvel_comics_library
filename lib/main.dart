@@ -25,7 +25,7 @@ void main() async {
 
 class Home extends StatefulWidget {
 
-  List<Widget> charactersWidgets = [];
+  Home({Key? key}) : super(key: key);
 
   @override
   _HomeState createState() => _HomeState();
@@ -63,7 +63,7 @@ class _HomeState extends State<Home> {
       ),
       body: GestureDetector(
         child: Container(
-          padding: EdgeInsets.all(10.0),
+          padding: EdgeInsets.only(left:10, right: 10),
           child: Center(
               child: _widgetOptions.elementAt(_selectedIndex),
           ),
@@ -90,7 +90,7 @@ class _HomeState extends State<Home> {
           ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.orange,
+        selectedItemColor: Colors.blueAccent,
         unselectedItemColor: Colors.grey,
         onTap: _onItemTapped,
       ),
