@@ -1,14 +1,25 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:personal_library/src/presentation/screens/characters_screen.dart';
 import 'package:personal_library/src/presentation/screens/comics_screen.dart';
 import 'package:personal_library/src/presentation/screens/creators_screen.dart';
+import 'package:personal_library/src/presentation/screens/landing_page.dart';
 import 'package:personal_library/src/presentation/screens/listing_screen.dart';
 
-void main(){
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  Future<FirebaseApp> init = Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform
+  );
+
   runApp(
       MaterialApp(
         debugShowCheckedModeBanner: true,
-        home: Home(),
+        home: LandingPage(init),
   ));
 }
 
@@ -46,7 +57,7 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('title'),
+        title: Text('Personal Library'),
         centerTitle: true,
         backgroundColor: Colors.grey,
       ),

@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "981696998389",
+    "project_id": "comicspersonallibrary",
+    "storage_bucket": "comicspersonallibrary.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:981696998389:android:99f19a373d5fde4c888ebc",
+        "android_client_info": {
+          "package_name": "app.brunelli.personal_library"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "981696998389-efdign0b330gsr4gc2mjql1n1m6s28bf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAflFwX6Q1zbFxG1aZvjU_JyLFrbzVmDug"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "981696998389-efdign0b330gsr4gc2mjql1n1m6s28bf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
