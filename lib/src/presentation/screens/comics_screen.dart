@@ -7,7 +7,7 @@ import 'package:personal_library/src/presentation/routes/hero_dialog_route.dart'
 
 class ComicsScreen extends StatefulWidget {
 
-  late final List<Comic> comics;
+  late final Future<List<Comic>> comics;
   late final bool withComics;
 
   ComicsScreen({Key? key}) : super(key: key){
@@ -24,15 +24,18 @@ class ComicsScreen extends StatefulWidget {
 class _ComicsScreenState extends State<ComicsScreen> {
 
   List<Widget> _comicsWidgets = [];
+  late Future<List<Comic>> _futureComics;
 
   void _getWidgetList({String? text}) async {
-    List<Comic> comics;
     if (widget.withComics) {
-      comics = widget.comics;
+      _futureComics = widget.comics;
     }
     else {
-      comics = await MarvelApiFacade.getComicsList(title: text);
+      _futureComics = MarvelApiFacade.getComicsList(title: text);
     }
+
+    var comics = await _futureComics;
+
     if (comics.isNotEmpty) {
       setState(() {
         List<Widget> widgets = [];
@@ -52,33 +55,46 @@ class _ComicsScreenState extends State<ComicsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        backgroundColor: Colors.transparent,
-        floatingActionButton:
-        FloatingActionButton.extended(
-            onPressed: () {
-              Navigator.of(context).push(HeroDialogRoute(
-                builder: (context) {
-                  return Padding(
-                      padding: const EdgeInsets.all(50),
-                      child: SearchCard(
-                          onTextChange: (String value) => setState(() {
-                            _getWidgetList(text: value);
-                          })
-                      )
-                  );
-                },
-              ));
-            },
-            backgroundColor: Colors.blueGrey,
-            label: Row(
-              children: const [
-                Icon(Icons.search),
-                Text('Search'),
-              ],
-            )
-        ),
-        body: ListView(children: _comicsWidgets)
+    return FutureBuilder(
+        future: _futureComics,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done){
+            return Scaffold(
+                backgroundColor: Colors.transparent,
+                floatingActionButton:
+                FloatingActionButton.extended(
+                    onPressed: () {
+                      Navigator.of(context).push(HeroDialogRoute(
+                        builder: (context) {
+                          return Padding(
+                              padding: const EdgeInsets.all(50),
+                              child: SearchCard(
+                                  onTextChange: (String value) => setState(() {
+                                    _getWidgetList(text: value);
+                                  })
+                              )
+                          );
+                        },
+                      ));
+                    },
+                    backgroundColor: Colors.blueGrey,
+                    label: Row(
+                      children: const [
+                        Icon(Icons.search),
+                        Text('Search'),
+                      ],
+                    )
+                ),
+                body: ListView(children: _comicsWidgets)
+            );
+          }
+          return const Scaffold(
+            backgroundColor: Colors.transparent,
+            body: Center(
+              child: Text('Loading...'),
+            ),
+          );
+      },
     );
   }
 }

@@ -43,7 +43,7 @@ class _AddListingCardState extends State<AddListingCard> {
           elevation: 4,
           borderRadius: BorderRadius.circular(20),
           child: Padding(
-            padding: EdgeInsets.only(right: 30, left: 30),
+            padding: const EdgeInsets.only(right: 30, left: 30),
             child: TextFormField(
               onChanged: (value){
                 _listingName = value;

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:personal_library/src/domain/entities/comic.dart';
 import 'package:personal_library/src/domain/entities/listing.dart';
 import 'package:personal_library/src/presentation/routes/hero_dialog_route.dart';
 import 'package:personal_library/src/presentation/screens/comics_screen.dart';
@@ -14,7 +15,6 @@ class ListingWidget extends StatefulWidget {
 }
 
 class _ListingWidgetState extends State<ListingWidget> {
-
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +39,7 @@ class _ListingWidgetState extends State<ListingWidget> {
                     )
                   ),
                   Expanded(
-                      child: ComicsScreen.withComics(widget.listing.comics)
+                      child: ComicsScreen.withComics(widget.listing.comics as Future<List<Comic>>)
                   )
                 ],
               ),

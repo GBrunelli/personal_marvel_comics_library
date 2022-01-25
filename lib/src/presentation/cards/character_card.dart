@@ -17,9 +17,9 @@ class CharacterWidget extends StatefulWidget {
 
 class _CharacterWidgetState extends State<CharacterWidget> {
 
-  late List<Comic> _comicList = [];
+  late Future<List<Comic>> _comicList;
   _getCharacterComicsWidgets() async {
-      _comicList = await MarvelApiFacade.getComicsListByCharacter(characterId: widget.character.id);
+      _comicList = MarvelApiFacade.getComicsListByCharacter(characterId: widget.character.id);
   }
 
   @override

@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:personal_library/src/data/datasource/marvel_api_facade.dart';
+import 'package:personal_library/src/domain/entities/comic.dart';
 import 'package:personal_library/src/domain/entities/creator.dart';
+import 'package:personal_library/src/presentation/routes/hero_dialog_route.dart';
+import 'package:personal_library/src/presentation/screens/comics_screen.dart';
 
 class CreatorWidget extends StatefulWidget {
 
@@ -13,20 +17,46 @@ class CreatorWidget extends StatefulWidget {
 
 class _CreatorWidgetState extends State<CreatorWidget> {
 
-  // _view_detailed(BuildContext context){
-  //   Navigator.push(
-  //     context,
-  //     MaterialPageRoute(builder: (context) => ComicWidget())
-  //   );
-  // }
+  late Future<List<Comic>> _comicList;
+  _getCreatorComicsWidgets() async {
+    _comicList = MarvelApiFacade.getComicListByCreator(creatorId: widget.creator.id);
+  }
 
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      // onTap: () => _view_detailed(context),
+      onTap: () {
+        _getCreatorComicsWidgets();
+        Navigator.of(context).push(HeroDialogRoute(
+          builder: (context) {
+            return Container(
+              color: Colors.black54,
+              padding : const EdgeInsets.only(top: 50, right: 10, left: 10),
+              child : Column(
+                children: [
+                  Material(
+                      color: Colors.blueGrey,
+                      elevation: 4,
+                      borderRadius: BorderRadius.circular(20),
+                      child:  Center(
+                        child: Text(
+                            widget.creator.name,
+                            style: Theme.of(context).textTheme.headline2,
+                            textScaleFactor: .5),
+                      )
+                  ),
+                  Expanded(
+                      child: ComicsScreen.withComics(_comicList)
+                  )
+                ],
+              ),
+            );
+          },
+        ));
+      },
       child: Container(
-        margin: EdgeInsets.only(top: 5, bottom: 5),
+        margin: const EdgeInsets.only(top: 5, bottom: 5),
         child: Material(
           color: Colors.grey,
           elevation: 4,
