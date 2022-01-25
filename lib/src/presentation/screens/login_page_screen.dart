@@ -80,7 +80,7 @@ class _LoginPageState extends State<LoginPage> {
                     _passwordVisible
                         ? Icons.visibility
                         : Icons.visibility_off,
-                    color: Theme.of(context).primaryColorDark,
+                    color: Colors.blueGrey,
                   ),
                   onPressed: () {
                     setState(() {
@@ -95,11 +95,11 @@ class _LoginPageState extends State<LoginPage> {
               padding: const EdgeInsets.only(top: 35),
               child: MaterialButton(
                 onPressed: _login,
-                color: Theme.of(context).primaryColor,
+                color: Colors.blueGrey,
                 child: const Text('Log In'),
               )
             ),
-            Container(
+            SizedBox(
                 width: MediaQuery.of(context).size.width,
                 child: MaterialButton(
                   onPressed: _createUser,

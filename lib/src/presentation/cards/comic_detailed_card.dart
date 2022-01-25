@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:personal_library/src/domain/entities/comic.dart';
-import 'package:personal_library/src/presentation/screens/select_listing.dart';
+import 'package:personal_library/src/presentation/screens/select_listing_screen.dart';
 import 'package:personal_library/src/presentation/routes/hero_dialog_route.dart';
 
 class ComicDetailedWidget extends StatefulWidget {

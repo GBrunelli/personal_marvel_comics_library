@@ -2,9 +2,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:personal_library/main.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:personal_library/firebase_options.dart';
-import 'package:personal_library/src/presentation/screens/login_page.dart';
+import 'login_page_screen.dart';
+import 'loading_screen.dart';
 
 class LandingPage extends StatelessWidget {
   LandingPage(this.init, {Key? key}) : super(key: key);
@@ -30,25 +29,17 @@ class LandingPage extends StatelessWidget {
               if (snapshot.connectionState == ConnectionState.active) {
                 Object? user = snapshot.data;
                 if(user == null) {
-                  return LoginPage();
+                  return const LoginPage();
                 }
                 else {
                   return Home();
                 }
               }
-              return const Scaffold(
-                body: Center(
-                  child: Text('Loading...'),
-                ),
-              );
+              return const LoadingPage();
             }
           );
         }
-        return const Scaffold(
-          body: Center(
-            child: Text('Loading...'),
-          ),
-        );
+        return const LoadingPage();
       }
     );
   }

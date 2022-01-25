@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:personal_library/src/domain/entities/comic.dart';
 import 'package:personal_library/src/domain/entities/listing.dart';
@@ -15,6 +17,24 @@ class ListingWidget extends StatefulWidget {
 }
 
 class _ListingWidgetState extends State<ListingWidget> {
+
+  late Future<List<Comic>> _futureComics;
+
+  _getComics() async{
+    Future(
+      () {
+        var completer = Completer<List<Comic>>();
+        completer.complete(widget.listing.comics);
+        _futureComics = completer.future;
+      }
+    );
+  }
+
+  @override
+  void initState() {
+    _getComics();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +59,7 @@ class _ListingWidgetState extends State<ListingWidget> {
                     )
                   ),
                   Expanded(
-                      child: ComicsScreen.withComics(widget.listing.comics as Future<List<Comic>>)
+                      child: ComicsScreen.withComics(_futureComics)
                   )
                 ],
               ),

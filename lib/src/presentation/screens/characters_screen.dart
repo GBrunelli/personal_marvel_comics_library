@@ -5,6 +5,8 @@ import 'package:personal_library/src/data/datasource/marvel_api_facade.dart';
 import 'package:personal_library/src/presentation/cards/search_card.dart';
 import 'package:personal_library/src/presentation/routes/hero_dialog_route.dart';
 
+import 'loading_screen.dart';
+
 class CharactersScreen extends StatefulWidget {
   const CharactersScreen({Key? key}) : super(key: key);
   @override
@@ -14,9 +16,12 @@ class CharactersScreen extends StatefulWidget {
 class _CharacterScreenState extends State<CharactersScreen> {
 
   List<Widget> _charactersWidgets = [];
+  late Future<List<Character>> _futureCharacters;
 
   void _getWidgetList({String? text}) async {
-    List<Character> characters = await MarvelApiFacade.getCharactersList(name: text);
+    _futureCharacters = MarvelApiFacade.getCharactersList(name: text);
+
+    List<Character> characters = await _futureCharacters;
     if (characters.isNotEmpty) {
       setState(() {
         List<Widget> widgets = [];
@@ -36,32 +41,40 @@ class _CharacterScreenState extends State<CharactersScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      floatingActionButton:
-        FloatingActionButton.extended(
-          onPressed: () {
-            Navigator.of(context).push(HeroDialogRoute(
-              builder: (context) {
-                return Padding(
-                  padding: const EdgeInsets.all(50),
-                  child: SearchCard(
-                    onTextChange: (String value) => setState(() {
-                      _getWidgetList(text: value);
-                    })
+    return FutureBuilder(
+      future: _futureCharacters,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done){
+          return Scaffold(
+              floatingActionButton:
+              FloatingActionButton.extended(
+                  onPressed: () {
+                    Navigator.of(context).push(HeroDialogRoute(
+                      builder: (context) {
+                        return Padding(
+                            padding: const EdgeInsets.all(50),
+                            child: SearchCard(
+                                onTextChange: (String value) => setState(() {
+                                  _getWidgetList(text: value);
+                                })
+                            )
+                        );
+                      },
+                    ));
+                  },
+                  backgroundColor: Colors.blueGrey,
+                  label: Row(
+                    children: const [
+                      Icon(Icons.search),
+                      Text('Search'),
+                    ],
                   )
-                );
-              },
-            ));
-          },
-          backgroundColor: Colors.blueGrey,
-          label: Row(
-            children: const [
-              Icon(Icons.search),
-              Text('Search'),
-            ],
-          )
-        ),
-      body: ListView(children: _charactersWidgets)
+              ),
+              body: ListView(children: _charactersWidgets)
+          );
+        }
+        return const LoadingPage();
+      },
     );
   }
 }

@@ -4,6 +4,7 @@ import 'package:personal_library/src/presentation/cards/comic_card.dart';
 import 'package:personal_library/src/data/datasource/marvel_api_facade.dart';
 import 'package:personal_library/src/presentation/cards/search_card.dart';
 import 'package:personal_library/src/presentation/routes/hero_dialog_route.dart';
+import 'package:personal_library/src/presentation/screens/loading_screen.dart';
 
 class ComicsScreen extends StatefulWidget {
 
@@ -88,12 +89,7 @@ class _ComicsScreenState extends State<ComicsScreen> {
                 body: ListView(children: _comicsWidgets)
             );
           }
-          return const Scaffold(
-            backgroundColor: Colors.transparent,
-            body: Center(
-              child: Text('Loading...'),
-            ),
-          );
+          return const LoadingPage();
       },
     );
   }

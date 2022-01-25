@@ -12,7 +12,7 @@ class AddListingCard extends StatefulWidget {
 class _AddListingCardState extends State<AddListingCard> {
 
   void _addListing(){
-    RealtimeDatabaseFacade.addListing(FirebaseAuth.instance.currentUser?.uid, _listingName, '');
+    RealtimeDatabaseFacade.addListing(FirebaseAuth.instance.currentUser?.uid, _listingName);
   }
 
   late String _listingName;

@@ -63,9 +63,10 @@ class RealtimeDatabaseFacade{
     _database.child('$userId/$listing/${comic.id}').update(comicMap);
   }
 
-  static addListing(String? userId, String? listing, String? description) {
+  static addListing(String? userId, String? listing) {
     if ((userId == null) || (listing == null)) return;
     var user = _database.child('$userId/$listing');
-    user.update({'description': description});
+    user.update({'description': ''});
+    // user.child('description').remove();
   }
 }

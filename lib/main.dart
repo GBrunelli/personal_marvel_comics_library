@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:personal_library/src/presentation/screens/characters_screen.dart';
 import 'package:personal_library/src/presentation/screens/comics_screen.dart';
 import 'package:personal_library/src/presentation/screens/creators_screen.dart';
-import 'package:personal_library/src/presentation/screens/landing_page.dart';
+import 'package:personal_library/src/presentation/screens/landing_screen.dart';
 import 'package:personal_library/src/presentation/screens/listing_screen.dart';
 
 import 'package:firebase_core/firebase_core.dart';
@@ -61,10 +61,19 @@ class _HomeState extends State<Home> {
         title: Text('Personal Library'),
         centerTitle: true,
         backgroundColor: Colors.blueGrey,
+        actions: [
+          IconButton(
+            alignment: Alignment.centerRight,
+            icon: const Icon(Icons.logout),
+            onPressed: () {
+              FirebaseAuth.instance.signOut();
+            },
+          ),
+        ]
       ),
       body: GestureDetector(
         child: Container(
-          padding: EdgeInsets.only(left:10, right: 10),
+          padding: const EdgeInsets.only(left:10, right: 10),
           child: Center(
               child: _widgetOptions.elementAt(_selectedIndex),
           ),
