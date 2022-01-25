@@ -1,24 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:personal_library/src/domain/entities/comic.dart';
 import 'package:personal_library/src/domain/entities/creator.dart';
-import 'package:personal_library/src/presentation/cards/character_card.dart';
-import 'package:personal_library/src/domain/entities/character.dart';
-import 'package:personal_library/src/presentation/cards/comic_card.dart';
 import 'package:personal_library/src/presentation/cards/creator_card.dart';
 import 'package:personal_library/src/data/datasource/marvel_api_facade.dart';
+import 'package:personal_library/src/presentation/cards/search_card.dart';
+import 'package:personal_library/src/presentation/routes/hero_dialog_route.dart';
 
 class CreatorsScreen extends StatefulWidget {
-
-  List<Widget> creatorsWidgets = [];
-
+  const CreatorsScreen({Key? key}) : super(key: key);
   @override
   _CreatorsState createState() => _CreatorsState();
 }
 
 class _CreatorsState extends State<CreatorsScreen> {
 
-  void _getWidgetList() async {
-    List<Creator> creators = await MarvelApiFacade.getCreatorsList();
+  List<Widget> _creatorsWidgets = [];
+
+  void _getWidgetList({String? text}) async {
+    List<Creator> creators = await MarvelApiFacade.getCreatorsList(name: text);
 
     if (creators.isNotEmpty) {
       setState(() {
@@ -26,7 +24,7 @@ class _CreatorsState extends State<CreatorsScreen> {
         for (var creator in creators){
           widgets.add(CreatorWidget(creator));
         }
-        widget.creatorsWidgets = widgets;
+        _creatorsWidgets = widgets;
       });
     }
   }
@@ -34,11 +32,38 @@ class _CreatorsState extends State<CreatorsScreen> {
   @override
   void initState() {
     _getWidgetList();
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return ListView(children: widget.creatorsWidgets);
+    return Scaffold(
+        floatingActionButton:
+        FloatingActionButton.extended(
+            onPressed: () {
+              Navigator.of(context).push(HeroDialogRoute(
+                builder: (context) {
+                  return Padding(
+                      padding: const EdgeInsets.all(50),
+                      child: SearchCard(
+                          onTextChange: (String value) => setState(() {
+                            _getWidgetList(text: value);
+                          })
+                      )
+                  );
+                },
+              ));
+            },
+            backgroundColor: Colors.blueGrey,
+            label: Row(
+              children: const [
+                Icon(Icons.search),
+                Text('Search'),
+              ],
+            )
+        ),
+        body: ListView(children: _creatorsWidgets)
+    );
   }
 }
 

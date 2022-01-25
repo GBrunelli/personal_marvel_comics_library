@@ -1,6 +1,4 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:personal_library/src/data/datasource/realtime_database_facade.dart';
 import 'package:personal_library/src/domain/entities/comic.dart';
 import 'package:personal_library/src/presentation/screens/select_listing.dart';
 import 'package:personal_library/src/presentation/routes/hero_dialog_route.dart';
@@ -33,7 +31,7 @@ class _ComicDetailedWidgetState extends State<ComicDetailedWidget> {
         child: ListView (
           children: [
             Container(
-                padding: EdgeInsets.all(15),
+                padding: const EdgeInsets.all(15),
                 child:
                 ClipRRect(
                   borderRadius: BorderRadius.circular(20),
@@ -63,7 +61,7 @@ class _ComicDetailedWidgetState extends State<ComicDetailedWidget> {
               ],
             ),
             Padding(
-              padding: EdgeInsets.only(top:20),
+              padding: const EdgeInsets.only(top:20),
               child:
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -80,19 +78,11 @@ class _ComicDetailedWidgetState extends State<ComicDetailedWidget> {
                       style: Theme.of(context).textTheme.headline5,
                       textScaleFactor: .7,
                     ),
-                    // Text('Personagens:',
-                    //   style: Theme.of(context).textTheme.headline5,
-                    //   textScaleFactor: .7,
-                    // ),
-                    // Text('Imagens:',
-                    //   style: Theme.of(context).textTheme.headline5,
-                    //   textScaleFactor: .7,
-                    // ),
                   ],
                 )
             ),
             Padding(
-              padding: EdgeInsets.only(top: 50),
+              padding: const EdgeInsets.only(top: 50),
               child: Align(
                 alignment: Alignment.bottomCenter,
                 child: MaterialButton (

@@ -10,9 +10,18 @@ import 'package:personal_library/src/domain/entities/comic.dart';
 import 'package:personal_library/src/domain/entities/creator.dart';
 
 abstract class MarvelApiFacade {
-  static Future<List<Character>> getCharactersList() async {
-    Uri request = Uri.https(baseUrl, baseRoute + '/characters',
-        {'apikey': apiKey, 'ts': ts, 'hash': hash});
+
+  static Future<List<Character>> getCharactersList({String? name}) async {
+    Uri request;
+    if (name == null) {
+      request = Uri.https(baseUrl, baseRoute + '/characters',
+          {'apikey': apiKey, 'ts': ts, 'hash': hash});
+    }
+    else {
+      request = Uri.https(baseUrl, baseRoute + '/characters',
+          {'apikey': apiKey, 'ts': ts, 'hash': hash, 'nameStartsWith': name});
+    }
+
     Response res = await get(request);
     var wrapper = DataWrapper<CharacterModel>.fromJson(jsonDecode(res.body), CharacterModel.fromJson);
 
@@ -30,9 +39,32 @@ abstract class MarvelApiFacade {
     return characters;
   }
 
-  static Future<List<Comic>> getComicsList() async {
-    Uri request = Uri.https(baseUrl, baseRoute + '/comics',
+  static Future<List<Comic>> getComicListByCreator({required int creatorId}) async {
+    Uri request = Uri.https(baseUrl, baseRoute + '/creators/$creatorId/comics',
         {'apikey': apiKey, 'ts': ts, 'hash': hash});
+    return await _requestToComicList(request);
+  }
+
+  static Future<List<Comic>> getComicsListByCharacter({required int characterId}) async {
+    Uri request = Uri.https(baseUrl, baseRoute + '/characters/$characterId/comics',
+        {'apikey': apiKey, 'ts': ts, 'hash': hash});
+    return await _requestToComicList(request);
+  }
+
+  static Future<List<Comic>> getComicsList({String? title, int? characterId}) async {
+    Uri request;
+    if(title == null){
+      request = Uri.https(baseUrl, baseRoute + '/comics',
+          {'apikey': apiKey, 'ts': ts, 'hash': hash});
+    }
+    else {
+      request = Uri.https(baseUrl, baseRoute + '/comics',
+          {'apikey': apiKey, 'ts': ts, 'hash': hash, 'titleStartsWith': title});
+    }
+    return await _requestToComicList(request);
+  }
+
+  static Future<List<Comic>> _requestToComicList(Uri request) async {
     Response res = await get(request);
     var wrapper = DataWrapper<ComicModel>.fromJson(jsonDecode(res.body), ComicModel.fromJson);
 
@@ -60,9 +92,17 @@ abstract class MarvelApiFacade {
     return comics;
   }
 
-  static Future<List<Creator>> getCreatorsList() async {
-    Uri request = Uri.https(baseUrl, baseRoute + '/creators',
-        {'apikey': apiKey, 'ts': ts, 'hash': hash});
+  static Future<List<Creator>> getCreatorsList({String? name}) async {
+    Uri request;
+    if (name == null){
+      request = Uri.https(baseUrl, baseRoute + '/creators',
+          {'apikey': apiKey, 'ts': ts, 'hash': hash});
+    }
+    else {
+      request = Uri.https(baseUrl, baseRoute + '/creators',
+          {'apikey': apiKey, 'ts': ts, 'hash': hash, 'nameStartsWith': name});
+    }
+
     Response res = await get(request);
     var wrapper = DataWrapper<CreatorModel>.fromJson(jsonDecode(res.body), CreatorModel.fromJson);
 

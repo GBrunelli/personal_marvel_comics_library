@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:personal_library/src/data/datasource/marvel_api_facade.dart';
 import 'package:personal_library/src/domain/entities/character.dart';
+import 'package:personal_library/src/domain/entities/comic.dart';
+import 'package:personal_library/src/presentation/routes/hero_dialog_route.dart';
+import 'package:personal_library/src/presentation/screens/comics_screen.dart';
 
 class CharacterWidget extends StatefulWidget {
 
@@ -12,17 +16,51 @@ class CharacterWidget extends StatefulWidget {
 }
 
 class _CharacterWidgetState extends State<CharacterWidget> {
+
+  late List<Comic> _comicList = [];
+  _getCharacterComicsWidgets() async {
+      _comicList = await MarvelApiFacade.getComicsListByCharacter(characterId: widget.character.id);
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      // onTap: () => , call detailed screen
+      onTap: () {
+        _getCharacterComicsWidgets();
+        Navigator.of(context).push(HeroDialogRoute(
+          builder: (context) {
+            return Container(
+              color: Colors.black54,
+              padding : const EdgeInsets.only(top: 50, right: 10, left: 10),
+              child : Column(
+                children: [
+                  Material(
+                      color: Colors.blueGrey,
+                      elevation: 4,
+                      borderRadius: BorderRadius.circular(20),
+                      child:  Center(
+                        child: Text(
+                            widget.character.name,
+                            style: Theme.of(context).textTheme.headline2,
+                            textScaleFactor: .5),
+                      )
+                  ),
+                  Expanded(
+                      child: ComicsScreen.withComics(_comicList)
+                  )
+                ],
+              ),
+            );
+          },
+        ));
+      },
       child: Container (
-        margin: EdgeInsets.only(top: 5, bottom: 5),
+        margin: const EdgeInsets.only(top: 5, bottom: 5),
         child: Material(
           elevation: 4,
           color: Colors.grey,
           borderRadius: BorderRadius.circular(20),
-          child: Container(
+          child: SizedBox(
             height: 170,
             child: Column (
               //crossAxisAlignment: CrossAxisAlignment.center,
@@ -32,7 +70,7 @@ class _CharacterWidgetState extends State<CharacterWidget> {
                     Container(
                         width: 130,
                         height: 130,
-                        padding: EdgeInsets.all(15),
+                        padding: const EdgeInsets.all(15),
                         child:
                         ClipRRect(
                           borderRadius: BorderRadius.circular(10),

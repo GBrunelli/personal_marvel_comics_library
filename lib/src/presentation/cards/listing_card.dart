@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:personal_library/src/domain/entities/listing.dart';
+import 'package:personal_library/src/presentation/routes/hero_dialog_route.dart';
+import 'package:personal_library/src/presentation/screens/comics_screen.dart';
 
 class ListingWidget extends StatefulWidget {
 
@@ -13,19 +15,40 @@ class ListingWidget extends StatefulWidget {
 
 class _ListingWidgetState extends State<ListingWidget> {
 
-  // _view_detailed(BuildContext context){
-  //   Navigator.push(
-  //     context,
-  //     MaterialPageRoute(builder: (context) => ComicWidget())
-  //   );
-  // }
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      // onTap: () => _view_detailed(context),
+      onTap: () {
+        Navigator.of(context).push(HeroDialogRoute(
+          builder: (context) {
+            return Container(
+              color: Colors.black54,
+              padding : const EdgeInsets.only(top: 50, right: 10, left: 10),
+              child : Column(
+                children: [
+                  Material(
+                    color: Colors.blueGrey,
+                    elevation: 4,
+                    borderRadius: BorderRadius.circular(20),
+                    child:  Center(
+                      child: Text(
+                          widget.listing.name,
+                          style: Theme.of(context).textTheme.headline2,
+                          textScaleFactor: .5),
+                    )
+                  ),
+                  Expanded(
+                      child: ComicsScreen.withComics(widget.listing.comics)
+                  )
+                ],
+              ),
+            );
+          },
+        ));
+      },
         child: Container(
-          margin: EdgeInsets.only(top: 5, bottom: 5),
+          margin: const EdgeInsets.only(top: 5, bottom: 5),
           height: 120,
           child: Material(
             color: Colors.grey,

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:personal_library/src/data/datasource/realtime_database_facade.dart';
 import 'package:personal_library/src/domain/entities/listing.dart';
 import 'package:personal_library/src/domain/entities/comic.dart';
+import 'package:personal_library/src/presentation/cards/option_listing_card.dart';
 
 import '../cards/listing_card.dart';
 
@@ -35,7 +36,7 @@ class _SelectListingState extends State<SelectListing> {
                 _addBook(listing.name);
                 Navigator.pop(context);
               },
-              child: ListingWidget(listing),
+              child: OptionListingWidget(listing),
             )
           );
         }
@@ -52,14 +53,11 @@ class _SelectListingState extends State<SelectListing> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      body: Center(
+    return Center(
         child: ListView(
-          padding: EdgeInsets.all(20),
+          padding: const EdgeInsets.all(20),
           shrinkWrap: true,
           children: _listings
-        )
       ),
     );
   }

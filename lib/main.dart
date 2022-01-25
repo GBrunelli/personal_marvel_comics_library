@@ -56,10 +56,11 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text('Personal Library'),
         centerTitle: true,
-        backgroundColor: Colors.grey,
+        backgroundColor: Colors.blueGrey,
       ),
       body: GestureDetector(
         child: Container(
@@ -90,7 +91,7 @@ class _HomeState extends State<Home> {
           ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.blueAccent,
+        selectedItemColor: Colors.blueGrey,
         unselectedItemColor: Colors.grey,
         onTap: _onItemTapped,
       ),

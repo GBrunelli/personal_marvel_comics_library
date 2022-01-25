@@ -7,9 +7,7 @@ import 'package:personal_library/src/presentation/cards/add_listing_card.dart';
 import '../cards/listing_card.dart';
 
 class ListingScreen extends StatefulWidget {
-  ListingScreen({Key? key}) : super(key: key);
-
-  List<Widget> listingWidgets = [];
+  const ListingScreen({Key? key}) : super(key: key);
 
   @override
   _ListingScreenState createState() => _ListingScreenState();
@@ -17,16 +15,17 @@ class ListingScreen extends StatefulWidget {
 
 class _ListingScreenState extends State<ListingScreen> {
 
+  List<Widget> listingWidgets = [];
+
   void _getWidgetList() async {
-    List<Listing> comics = await RealtimeDatabaseFacade.getListings(FirebaseAuth.instance.currentUser?.uid);
-    if (comics.isNotEmpty) {
+    List<Listing> listings = await RealtimeDatabaseFacade.getListings(FirebaseAuth.instance.currentUser?.uid);
+    if (listings.isNotEmpty) {
       setState(() {
         List<Widget> widgets = [];
-        for (var comic in comics){
-          widgets.add(ListingWidget(comic));
+        for (var listing in listings){
+          widgets.add(ListingWidget(listing));
         }
-        widget.listingWidgets = widgets;
-        widget.listingWidgets.add(const AddListingCard());
+        listingWidgets = widgets;
       });
     }
   }
@@ -39,29 +38,21 @@ class _ListingScreenState extends State<ListingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      children:
-      widget.listingWidgets,
+    return Column(
+      children: [
+        StreamBuilder(
+          stream: RealtimeDatabaseFacade.getDatabaseStream(),
+          builder: (context, snapshot) {
+            _getWidgetList();
+            return Expanded(
+              child: ListView(
+                children: listingWidgets,
+              ),
+            );
+          }
+        ),
+        const AddListingCard(),
+      ],
     );
-    //   Scaffold(
-    //   body: Center(
-    //     child: Column(
-    //       children: [
-    //         MaterialButton(
-    //           onPressed: () {
-    //             FirebaseAuth.instance.signOut();
-    //           },
-    //           child: const Text('Log Out'),
-    //         ),
-    //         MaterialButton(
-    //           onPressed: () {
-    //             _addListing();
-    //           },
-    //           child: const Text('Add Listing'),
-    //         ),
-    //       ],
-    //     )
-    //   ),
-    // );
   }
 }
