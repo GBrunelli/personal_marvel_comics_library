@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:personal_library/src/domain/entities/comic.dart';
 import 'package:personal_library/src/presentation/cards/comic_card.dart';
@@ -32,7 +33,8 @@ class _ComicsScreenState extends State<ComicsScreen> {
       _futureComics = widget.comics;
     }
     else {
-      _futureComics = MarvelApiFacade.getComicsList(title: text);
+      _futureComics = MarvelApiFacade.getComicsList(
+          FirebaseAuth.instance.currentUser?.uid, title: text);
     }
 
     var comics = await _futureComics;

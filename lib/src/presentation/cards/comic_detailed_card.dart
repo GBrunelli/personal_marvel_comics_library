@@ -78,6 +78,10 @@ class _ComicDetailedWidgetState extends State<ComicDetailedWidget> {
                       style: Theme.of(context).textTheme.headline5,
                       textScaleFactor: .7,
                     ),
+                    Text('Listas: ${widget.comic.numberOfListings}',
+                      style: Theme.of(context).textTheme.headline5,
+                      textScaleFactor: .7,
+                    ),
                   ],
                 )
             ),

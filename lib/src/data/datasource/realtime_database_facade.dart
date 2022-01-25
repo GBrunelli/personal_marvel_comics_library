@@ -9,36 +9,72 @@ class RealtimeDatabaseFacade{
     return _database.onValue;
   }
 
+  static Future<Comic?> getComic(int comicId) async {
+    DataSnapshot a = await _database.child('$comicId').get();
+    if (a.value != null){
+      Map<dynamic, dynamic> foundComic = a.value as Map<dynamic, dynamic>;
+      String? sKey = a.key;
+      if (sKey != null) {
+        return _generateComicFromMap(int.parse(sKey), foundComic);
+      }
+    }
+    return null;
+  }
+
   static Future<List<Listing>> getListings(String? userId) async {
     List<Listing> listings = [];
-    var resultQuery = await _database.child('$userId').get();
+    DataSnapshot resultQuery = await _database.child('$userId').get();
     if (resultQuery.value == null) {
       return listings;
     }
-    var data = resultQuery.value as Map<dynamic, dynamic>;
+
+    Map<dynamic, dynamic> data = resultQuery.value as Map<dynamic, dynamic>;
     for (var entry in data.entries){
-      var foundListing = Listing(entry.key);
-      var comics = entry.value as Map<dynamic, dynamic>;
+
+      Listing foundListing = Listing(entry.key);
+
+      Map<dynamic, dynamic> comics = {};
+
+      try {
+        comics = entry.value['comics'] as Map<dynamic, dynamic>;
+      }
+      catch (e) {}
+
       for (var comicsEntry in comics.entries){
+
+        String comicPath;
+
         try {
-          foundListing.comics.add(
-            Comic(int.parse(comicsEntry.key),
-                comicsEntry.value['title'] ?? '',
-                comicsEntry.value['creator'] ?? '',
-                comicsEntry.value['description'] ?? '',
-                comicsEntry.value['series'] ?? '',
-                comicsEntry.value['listing'] ?? '',
-                comicsEntry.value['numberOfListings'] ?? 0,
-                comicsEntry.value['isbn'] ?? '',
-                comicsEntry.value['numberOfPages'] ?? '',
-                comicsEntry.value['favoriteListings'] ?? 0,
-                comicsEntry.value['thumbUrl'] ?? '',
-                comicsEntry.value['thumbExtension'] ?? '',
-            )
-          );
+          comicPath = '${int.parse(comicsEntry.key)}';
         }
-        catch (e) {
-          print(e);
+        catch (e){
+          continue;
+        }
+
+        DataSnapshot foundComicSnapshot = await _database.child(comicPath).get();
+
+        if (foundComicSnapshot.value != null) {
+          Map<dynamic, dynamic> foundComicData = foundComicSnapshot.value as Map<dynamic, dynamic>;
+          try {
+            foundListing.comics.add(_generateComicFromMap(int.parse(comicsEntry.key), foundComicData));
+            //     Comic(int.parse(comicsEntry.key),
+            //       foundComicData['title'] ?? '',
+            //       foundComicData['creator'] ?? '',
+            //       foundComicData['description'] ?? '',
+            //       foundComicData['series'] ?? '',
+            //       foundComicData['listing'] ?? '',
+            //       foundComicData['numberOfListings'] ?? 0,
+            //       foundComicData['isbn'] ?? '',
+            //       foundComicData['numberOfPages'] ?? '',
+            //       foundComicData['favoriteListings'] ?? 0,
+            //       foundComicData['thumbUrl'] ?? '',
+            //       foundComicData['thumbExtension'] ?? '',
+            //     )
+            // );
+          }
+          catch (e) {
+            print(e);
+          }
         }
       }
       listings.add(foundListing);
@@ -46,7 +82,23 @@ class RealtimeDatabaseFacade{
     return listings;
   }
 
-  static addBookToListing(String? userId, String listing, Comic comic){
+  static Comic _generateComicFromMap(int id, Map<dynamic, dynamic> values){
+    return Comic(id,
+      values['title'] ?? '',
+      values['creator'] ?? '',
+      values['description'] ?? '',
+      values['series'] ?? '',
+      values['listing'] ?? '',
+      values['numberOfListings'] ?? 0,
+      values['isbn'] ?? '',
+      values['numberOfPages'] ?? '',
+      values['favoriteListings'] ?? 0,
+      values['thumbUrl'] ?? '',
+      values['thumbExtension'] ?? '',
+    );
+  }
+
+  static Map<String, dynamic> _generateMapFromComic(Comic comic) {
     Map<String, dynamic> comicMap = {
       'title': comic.title,
       'creator': comic.creator,
@@ -60,13 +112,62 @@ class RealtimeDatabaseFacade{
       'thumbUrl': comic.thumbBaseUrl,
       'thumbExtension': comic.imageExtension
     };
-    _database.child('$userId/$listing/${comic.id}').update(comicMap);
+    return comicMap;
+  }
+
+  static Future<Listing?> getListing(String userId, String listingName) async {
+    List<Listing> listings = await getListings(userId);
+    for (var listing in listings){
+      if(listing.name == listingName) {
+        return listing;
+      }
+    }
+    return null;
+  }
+
+  static Future<bool> comicInListing(String userId, int comicId, String listingName) async {
+    Listing? listing = await getListing(userId, listingName);
+    if(listing != null){
+      for (Comic c in listing.comics){
+        if (c.id == comicId){
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  static addBookToListing(String? userId, String listingName, Comic comic) async{
+    if(userId == null) return;
+
+    String comicPathInListing = '$userId/$listingName/comics/${comic.id}';
+    String comicPath = '${comic.id}';
+
+    Map<String, dynamic> comicMap = _generateMapFromComic(comic);
+
+    DataSnapshot comicFoundSnapshot = await _database.child(comicPath).get();
+
+    if (comicFoundSnapshot.value == null){
+      comicMap['listing'] = listingName;
+      comicMap['numberOfListings'] = 1;
+    }
+    else {
+      Map<dynamic, dynamic> comicFound = comicFoundSnapshot.value as Map<dynamic, dynamic>;
+      if (! await comicInListing(userId, comic.id, listingName)){
+        comicMap['numberOfListings'] = comicFound['numberOfListings'] + 1;
+      }
+      else {
+        return;
+      }
+    }
+
+    _database.child(comicPath).update(comicMap);
+    _database.child(comicPathInListing).update(comicMap);
   }
 
   static addListing(String? userId, String? listing) {
     if ((userId == null) || (listing == null)) return;
     var user = _database.child('$userId/$listing');
     user.update({'description': ''});
-    // user.child('description').remove();
   }
 }

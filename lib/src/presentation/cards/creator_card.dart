@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:personal_library/src/data/datasource/marvel_api_facade.dart';
 import 'package:personal_library/src/domain/entities/comic.dart';
@@ -19,7 +20,8 @@ class _CreatorWidgetState extends State<CreatorWidget> {
 
   late Future<List<Comic>> _comicList;
   _getCreatorComicsWidgets() async {
-    _comicList = MarvelApiFacade.getComicListByCreator(creatorId: widget.creator.id);
+    _comicList = MarvelApiFacade.getComicListByCreator(
+        FirebaseAuth.instance.currentUser?.uid, creatorId: widget.creator.id);
   }
 
 

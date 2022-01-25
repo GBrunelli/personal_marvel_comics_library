@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart';
 import 'package:personal_library/src/core/utils/constants.dart';
+import 'package:personal_library/src/data/datasource/realtime_database_facade.dart';
 import 'package:personal_library/src/data/models/character_model.dart';
 import 'package:personal_library/src/data/models/comic_model.dart';
 import 'package:personal_library/src/data/models/creator_model.dart';
@@ -23,7 +24,8 @@ abstract class MarvelApiFacade {
     }
 
     Response res = await get(request);
-    var wrapper = DataWrapper<CharacterModel>.fromJson(jsonDecode(res.body), CharacterModel.fromJson);
+    var wrapper = DataWrapper<CharacterModel>.
+    fromJson(jsonDecode(res.body), CharacterModel.fromJson);
 
     List<Character> characters = [];
     for (var character in wrapper.data.result){
@@ -39,19 +41,22 @@ abstract class MarvelApiFacade {
     return characters;
   }
 
-  static Future<List<Comic>> getComicListByCreator({required int creatorId}) async {
+  static Future<List<Comic>> getComicListByCreator(String? userId,
+      {required int creatorId}) async {
     Uri request = Uri.https(baseUrl, baseRoute + '/creators/$creatorId/comics',
         {'apikey': apiKey, 'ts': ts, 'hash': hash});
-    return await _requestToComicList(request);
+    return await _requestComicList(userId, request);
   }
 
-  static Future<List<Comic>> getComicsListByCharacter({required int characterId}) async {
+  static Future<List<Comic>> getComicsListByCharacter(String? userId,
+      {required int characterId}) async {
     Uri request = Uri.https(baseUrl, baseRoute + '/characters/$characterId/comics',
         {'apikey': apiKey, 'ts': ts, 'hash': hash});
-    return await _requestToComicList(request);
+    return await _requestComicList(userId, request);
   }
 
-  static Future<List<Comic>> getComicsList({String? title, int? characterId}) async {
+  static Future<List<Comic>> getComicsList( String? userId,
+      {String? title, int? characterId}) async {
     Uri request;
     if(title == null){
       request = Uri.https(baseUrl, baseRoute + '/comics',
@@ -61,15 +66,21 @@ abstract class MarvelApiFacade {
       request = Uri.https(baseUrl, baseRoute + '/comics',
           {'apikey': apiKey, 'ts': ts, 'hash': hash, 'titleStartsWith': title});
     }
-    return await _requestToComicList(request);
+    return await _requestComicList(userId, request);
   }
 
-  static Future<List<Comic>> _requestToComicList(Uri request) async {
+  static Future<List<Comic>> _requestComicList(String? userId, Uri request) async {
     Response res = await get(request);
-    var wrapper = DataWrapper<ComicModel>.fromJson(jsonDecode(res.body), ComicModel.fromJson);
+    var wrapper = DataWrapper<ComicModel>.
+    fromJson(jsonDecode(res.body), ComicModel.fromJson);
+
+
 
     List<Comic> comics = [];
     for (var comic in wrapper.data.result){
+
+      Comic? userComicData = await RealtimeDatabaseFacade.getComic(comic.id);
+
       String creators = '';
       for (var creator in comic.creators.items){
         creators += creator.name + ' ';
@@ -80,11 +91,11 @@ abstract class MarvelApiFacade {
         creators,
         comic.description,
         comic.series.name,
-        '', // TODO: link with user data - name listing
-        0, // TODO: link with user data - number of listing
+        userComicData != null ? userComicData.listing : '',
+        userComicData != null ? userComicData.numberOfListings : 0,
         comic.isbn,
         comic.pageCount,
-        0, // TODO: link with user data - number of favorites
+        userComicData != null ? userComicData.numberOfListings : 0,
         comic.thumbnail.path,
         comic.thumbnail.extension
       ));
@@ -104,7 +115,8 @@ abstract class MarvelApiFacade {
     }
 
     Response res = await get(request);
-    var wrapper = DataWrapper<CreatorModel>.fromJson(jsonDecode(res.body), CreatorModel.fromJson);
+    var wrapper = DataWrapper<CreatorModel>.
+    fromJson(jsonDecode(res.body), CreatorModel.fromJson);
 
     List<Creator> creators = [];
     for (var creator in wrapper.data.result){
