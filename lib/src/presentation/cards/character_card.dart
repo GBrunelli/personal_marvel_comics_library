@@ -97,9 +97,9 @@ class _CharacterWidgetState extends State<CharacterWidget> {
                     Text('${widget.character.numberHQs} Aparições',
                         style: Theme.of(context).textTheme.headline4,
                         textScaleFactor: .5),
-                    Text('${widget.character.savedHQs} Favoritos',
-                        style: Theme.of(context).textTheme.headline4,
-                        textScaleFactor: .5)
+                    // Text('${widget.character.savedHQs} Favoritos',
+                    //     style: Theme.of(context).textTheme.headline4,
+                    //     textScaleFactor: .5)
                   ],
                 )
               ],

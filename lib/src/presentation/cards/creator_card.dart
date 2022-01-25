@@ -92,9 +92,9 @@ class _CreatorWidgetState extends State<CreatorWidget> {
                     Text('${widget.creator.numberHQs} Comics',
                         style: Theme.of(context).textTheme.headline4,
                         textScaleFactor: .5),
-                    Text('${widget.creator.savedHQs} Favoritos',
-                        style: Theme.of(context).textTheme.headline4,
-                        textScaleFactor: .5)
+                    // Text('${widget.creator.savedHQs} Favoritos',
+                    //     style: Theme.of(context).textTheme.headline4,
+                    //     textScaleFactor: .5)
                   ],
                 )
               )

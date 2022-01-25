@@ -36,6 +36,7 @@ class _ComicWidgetState extends State<ComicWidget> {
             child: Column (
               children: [
                 Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
                         padding: const EdgeInsets.all(15),
@@ -64,6 +65,26 @@ class _ComicWidgetState extends State<ComicWidget> {
                           ),
                         )
                     ),
+                    Container(
+                      padding: const EdgeInsets.all(10),
+                      child: (() {
+                        if(widget.comic.numberOfListings == 0){
+                          return const Icon(Icons.favorite_border);
+                        }
+                        else if (widget.comic.numberOfListings == 1){
+                          return const Icon(Icons.favorite);
+                        }
+                        return Row(
+                          children: [
+                            Text(
+                              '${widget.comic.numberOfListings}',
+                              textScaleFactor: 1.4,
+                            ),
+                            const Icon(Icons.favorite)
+                          ]
+                        );
+                      })(),
+                    )
                   ],
                 ),
               ],
